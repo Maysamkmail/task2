@@ -1,0 +1,338 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+h1 {
+  margin-top: 20px;
+}
+.todo-container {
+  width: 80%;
+  margin-top: 20px;
+  border: 2px solid #0000003b;
+  padding: 20px;
+  border-radius: 3px;
+}   
+.todo-input-wrapper {
+  display: flex;
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center;
+  align-items: flex-start; 
+  margin-bottom: 20px; 
+} 
+.todo-input{
+  width: 98%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+} 
+
+.add-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: rgb(72, 132, 206);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+.add-btn:hover {
+  background-color: #214871;
+}
+.warning {
+  color: red;
+  font-size: 14px;
+  text-align: left; /* المحاذاة إلى اليسار */
+  margin-top: 10px;
+  direction: ltr; /* للتأكد من أن النص يتبع المحاذاة من اليسار */
+}
+/* تعديل زر الإضافة ليبدو متناسبًا مع القائمة المنسدلة */
+.add-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: rgb(72, 132, 206);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  position: relative;
+  z-index: 1; /* للحفاظ على ظهور الزر فوق العناصر الأخرى */
+}
+
+.dropdown {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-height: 150px;
+  overflow-y: auto;
+  display: none;
+  background-color: white;
+  margin-top: 10px;
+}
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.h1{
+  margin-top: 20px;
+}
+
+.filter-buttons {
+  display: flex; 
+  justify-content: space-between; 
+  width: 80%;  
+}
+
+.filter-buttons button {
+  width: 32%; 
+  padding: 10px; 
+  margin: 5px; 
+  font-size: 14px; 
+  border: none;
+  background-color:  rgb(72, 132, 206);
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.filter-buttons button:hover {
+  background-color:#214871;
+}
+
+ul#todo-list {
+  list-style: none; 
+  padding: 10px; 
+  margin: 0;
+  width: 80%; 
+  border-radius: 8px; 
+  background-color: #ffffff; 
+  
+}
+
+ul#todo-list li {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  background-color: #f9f9f9; 
+  padding: 15px; 
+  margin-bottom: 10px; 
+  border: 2px solid #00000054;
+  border-radius: 2px; 
+  font-size: 18px;
+}
+
+ul#todo-list li.done {
+  text-decoration: line-through; 
+  color: #888; 
+}
+
+ul#todo-list li input[type="checkbox"] {
+  transform: scale(1.5); 
+  margin-right: 10px; 
+}
+
+ul#todo-list li span {
+  flex-grow: 1; 
+  padding-left: 10px; 
+}
+
+ul#todo-list li .actions button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #070585;
+}
+
+ul#todo-list li .actions button:hover {
+  color:#070585 ; 
+  
+}
+
+ul#todo-list li .actions .delete-btn {
+  color: #dc3545; 
+}
+
+ul#todo-list li .actions .delete-btn:hover {
+  color: #a71d2a; 
+}
+
+ul#todo-list li input[type="checkbox"] {
+  position: absolute; 
+  right: 230px; 
+  transform: scale(1.5); 
+  cursor: pointer;
+}
+
+ul#todo-list li input[type="checkbox"]:checked {
+  accent-color: red;
+}
+
+ul#todo-list li input[type="checkbox"]:checked + span {
+  color: red; 
+  text-decoration: line-through; 
+}
+
+#editModal {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); 
+}
+
+#modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+#editInput {
+  width: 80%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 2px solid #000;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+#buttons {
+  display: flex;
+  justify-content: center; /* لوضع الأزرار في الوسط */
+  gap: 10px; /* لتحديد المسافة بين الأزرار */
+  margin-top: 20px;
+}
+
+#buttons button {
+  padding: 8px 16px; /* تقليل الحشو لزيادة المسافة الصغيرة */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#buttons button:hover {
+  opacity: 0.8;
+}
+
+#buttons button:first-child {
+  background-color: #070585;
+  color: white;
+}
+
+#buttons button:last-child {
+  background-color: #85000d;
+  color: white;
+}
+
+#delete-done, #delete-all {
+  padding: 8px 200px; /* تغيير حجم الزر */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px; /* تغيير حجم الخط */
+  margin-right: 10px;
+  transition: background-color 0.3s ease, transform 0.2s; /* إضافة تأثيرات عند التمرير */
+}
+
+#delete-done {
+  background-color: #ba0416; /* اللون الأخضر */
+  color: white;
+}
+
+#delete-all {
+  background-color: #ba0416; /* اللون الأحمر */
+  color: white;
+}
+
+#delete-done:hover {
+  background-color: #ab5860; /* اللون الأخضر الداكن عند التمرير */
+  transform: scale(1.05); /* تكبير الزر قليلاً عند التمرير */
+}
+
+#delete-all:hover {
+  background-color: #ab5860; /* اللون الأحمر الداكن عند التمرير */
+  transform: scale(1.05); /* تكبير الزر قليلاً عند التمرير */
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 200px;
+  height: 120px ;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  margin: 0;
+  color: #0e0e0e;
+}
+
+.modal-content p {
+  margin: 10px 0 20px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.modal-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.modal-buttons button:first-child {
+  background-color: #1a1a1c71;
+  color: white;
+  border-radius: 2px;
+}
+
+.modal-buttons button:last-child {
+  background-color: #85000d;
+  color: white;
+  border-radius: 2px;
+}
+
+.modal-buttons button:hover {
+  opacity: 0.8;
+}
