@@ -1,78 +1,81 @@
 const todoInput = document.getElementById('todoInput');
 const warning = document.getElementById('warning');
 const dropdown = document.getElementById('dropdown');
-const todoList = document.getElementById('todo-list'); // القائمة التي ستعرض المهام
-let tasks = JSON.parse(localStorage.getItem('tasks')) || []; // جلب المهام المخزنة من localStorage
+const todoList = document.getElementById('todo-list'); 
+let tasks = JSON.parse(localStorage.getItem('tasks')) || []; 
 const editModal = document.getElementById('editModal');
 const editInput = document.getElementById('editInput');
+
+
+
+const deleteDoneModal = document.getElementById("deleteDoneModal");
+const deleteAllModal = document.getElementById("deleteAllModal");
+
+const confirmDeleteDoneBtn = document.getElementById("confirmDeleteDone");
+const cancelDeleteDoneBtn = document.getElementById("cancelDeleteDone");
+
+const confirmDeleteAllBtn = document.getElementById("confirmDeleteAll");
+const cancelDeleteAllBtn = document.getElementById("cancelDeleteAll");
+
+const errorMessage = document.getElementById("errorMessage");
+
+
 let editingIndex = null;
 
-// إضافة الأحداث للأزرار
 document.getElementById('show-all').addEventListener('click', () => filterTasks('all'));
 document.getElementById('show-done').addEventListener('click', () => filterTasks('done'));
 document.getElementById('show-todo').addEventListener('click', () => filterTasks('todo'));
 
-// دالة لتصفية المهام
 function filterTasks(filter) {
   let filteredTasks = [];
 
   if (filter === 'done') {
-    // تصفية المهام المكتملة
+ 
     filteredTasks = tasks.filter(task => task.done);
   } else if (filter === 'todo') {
-    // تصفية المهام غير المكتملة
+   
     filteredTasks = tasks.filter(task => !task.done);
   } else {
-    // عرض جميع المهام
+   
     filteredTasks = tasks;
   }
 
-  renderTasks(filteredTasks); // إعادة عرض المهام بناءً على الفلتر
+  renderTasks(filteredTasks); 
 }
 
-// تحديث واجهة القائمة لعرض المهام
 function renderTasks(filteredTasks) {
-  todoList.innerHTML = ''; // مسح القائمة لإعادة بنائها
+  todoList.innerHTML = ''; 
   filteredTasks.forEach((task, index) => {
     const li = document.createElement('li');
-    li.className = task.done ? 'done' : ''; // إذا كانت المهمة مكتملة، أضف التنسيق
-
-    // إضافة checkbox
+    li.className = task.done ? 'done' : '';
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = task.done;
-    checkbox.addEventListener('change', () => toggleTaskDone(index)); // تحديث حالة المهمة
+    checkbox.addEventListener('change', () => toggleTaskDone(index)); 
 
-    // نص المهمة
+   
     const taskText = document.createElement('span');
     taskText.textContent = task.text;
-
-    // أزرار التعديل والحذف
     const actionsDiv = document.createElement('div');
     actionsDiv.className = 'actions';
-
     const editBtn = document.createElement('button');
     editBtn.className = 'edit-btn';
-    editBtn.innerHTML = '<i class="fas fa-edit"></i>'; // أيقونة التعديل
-    editBtn.addEventListener('click', () => editTask(index)); // تعديل المهمة
-
+    editBtn.innerHTML = '<i class="fas fa-edit"></i>'; 
+    editBtn.addEventListener('click', () => editTask(index)); 
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
-    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>'; // أيقونة الحذف
-    deleteBtn.addEventListener('click', () => deleteTask(index)); // حذف المهمة
-
+    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>'; 
+    deleteBtn.addEventListener('click', () => deleteTask(index)); 
     actionsDiv.appendChild(editBtn);
     actionsDiv.appendChild(deleteBtn);
-
     li.appendChild(checkbox);
     li.appendChild(taskText);
     li.appendChild(actionsDiv);
-
     todoList.appendChild(li);
   });
 }
 
-// إضافة مهمة جديدة
+
 function addTask() {
   const value = todoInput.value.trim();
 
@@ -86,130 +89,170 @@ function addTask() {
     return;
   }
 
+  if (value.length <= 5) {
+    warning.textContent = 'Task must be longer than 5 characters';
+    return;
+  }
+
+  if (!/^[a-zA-Z\s]+$/.test(value)) {
+    warning.textContent = 'Task must only contain English';
+    return;
+  }
+
   warning.textContent = '';
-  tasks.push({ text: value, done: false }); // إضافة مهمة جديدة ككائن
-  localStorage.setItem('tasks', JSON.stringify(tasks)); // تخزين المهام في localStorage
+  tasks.push({ text: value, done: false }); 
+  localStorage.setItem('tasks', JSON.stringify(tasks)); 
   todoInput.value = '';
   dropdown.style.display = 'none';
-  renderTasks(tasks); // إعادة عرض المهام بعد إضافة جديدة
+  renderTasks(tasks); 
 }
-
-// تحديث حالة المهمة (مكتملة أو غير مكتملة)
-function toggleTaskDone(index) {
-  tasks[index].done = !tasks[index].done;
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-  renderTasks(tasks);
-}
-
-// تعديل المهمة
-function editTask(index) {
-  editingIndex = index; // حفظ الفهرس الخاص بالمهمة لتعديلها لاحقاً
-  editInput.value = tasks[index].text; // تحميل نص المهمة في الـ input
-  editModal.style.display = 'flex'; // عرض نافذة التعديل
-}
-
-// حفظ التعديلات
-function saveEdit() {
-  const newTask = editInput.value.trim();
-  if (newTask !== '') {
-    tasks[editingIndex].text = newTask; // تحديث نص المهمة
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    renderTasks(tasks); // إعادة عرض المهام
-    closeEditModal(); // إغلاق نافذة التعديل
-  }
-}
-
-// إغلاق نافذة التعديل
-function closeEditModal() {
-  editModal.style.display = 'none';
-  editInput.value = ''; // مسح حقل الإدخال بعد الإغلاق
-}
-
-// حذف المهمة
-function deleteTask(index) {
-  tasks.splice(index, 1);
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-  renderTasks(tasks);
-}
-
-// حذف المهام المكتملة
-document.getElementById('delete-done').addEventListener('click', () => {
-  // تصفية المهام وحذف التي تحتوي على علامة "مكتملة"
-  tasks = tasks.filter(task => !task.done);  // الاحتفاظ بالمهام غير المكتملة
-  localStorage.setItem('tasks', JSON.stringify(tasks)); // تخزين المهام المحدثة
-  renderTasks(tasks); // إعادة عرض المهام بعد الحذف
-});
-
-// حذف جميع المهام
-document.getElementById('delete-all').addEventListener('click', () => {
-  tasks = []; // مسح جميع المهام
-  localStorage.setItem('tasks', JSON.stringify(tasks)); // تخزين المهام المحدثة
-  renderTasks(tasks); // إعادة عرض المهام بعد الحذف
-});
-// عرض السجل في القائمة المنسدلة
 todoInput.addEventListener('input', () => {
   const value = todoInput.value.trim();
-
-  // عرض رسالة التحذير إذا كان الإدخال يبدأ برقم
   if (/^\d/.test(value)) {
     warning.textContent = 'Task cannot start with a number';
+  } else if (value.length <= 5 && value.length > 0) {
+    warning.textContent = 'Task must be longer than 5 characters';
+  } else if (!/^[a-zA-Z\s]*$/.test(value)) {
+    warning.textContent = 'Only English';
   } else {
     warning.textContent = '';
   }
+  
+dropdown.innerHTML = ''; 
+dropdown.style.display = 'block'; 
+const filteredTasks = tasks.filter(task =>
+  task.text.toLowerCase().includes(todoInput.value.trim().toLowerCase())
+);
 
-  // تحديث القائمة المنسدلة مع المهام المخزنة
-  dropdown.innerHTML = ''; // إعادة تعيين المحتوى القديم
-  if (value.length > 0) {
+const tasksToShow = filteredTasks.length > 0 ? filteredTasks : tasks;
+
+tasksToShow.forEach(task => {
+  const div = document.createElement('div');
+  div.textContent = task.text;
+  div.className = 'dropdown-item'; 
+  dropdown.appendChild(div);
+
+  div.addEventListener('click', () => {
+    todoInput.value = task.text; 
+    dropdown.style.display = 'none'; 
+  });
+});
+});
+todoInput.addEventListener('input', () => {
+  const value = todoInput.value.trim();
+
+  if (/^\d/.test(value)) {
+    warning.textContent = 'Task cannot start with a number';
+  } else if (value.length < 5 && value.length > 0) {
+    warning.textContent = 'Task must be longer than 5 characters';
+  } else if (!/^[a-zA-Z\s]*$/.test(value)) {
+    warning.textContent = 'Only English';
+  } else {
+    warning.textContent = '';
+  }
+  dropdown.innerHTML = ''; 
+  if (value.length > 0 && /^[a-zA-Z\s]*$/.test(value)) {
     const filteredTasks = tasks.filter(task => task.text.toLowerCase().includes(value.toLowerCase()));
 
     if (filteredTasks.length > 0) {
-      dropdown.style.display = 'block';
+      dropdown.style.display = 'block'; 
       filteredTasks.forEach(task => {
         const div = document.createElement('div');
         div.textContent = task.text;
         div.className = 'dropdown-item';
         dropdown.appendChild(div);
-
-        div.addEventListener('click', () => {
-          todoInput.value = task.text;
-          dropdown.style.display = 'none';
-        });
       });
-    } else {
-      dropdown.style.display = 'none';
     }
-  } else {
+  }   
+       
+});
+document.addEventListener('click', (event) => {
+  if (!todoInput.contains(event.target) && !dropdown.contains(event.target)) {
     dropdown.style.display = 'none';
   }
 });
 
-// عند تحميل الصفحة، عرض المهام المخزنة
-renderTasks(tasks);
-
-let taskToDeleteIndex = null; // حفظ الفهرس الخاص بالمهمة للحذف لاحقًا
-
-// حذف المهمة مع رسالة تأكيد مخصصة
-function deleteTask(index) {
-  taskToDeleteIndex = index; // حفظ الفهرس الخاص بالمهمة
-  document.getElementById('confirmModal').style.display = 'flex'; // إظهار النافذة
+function toggleTaskDone(index) {
+  tasks[index].done = !tasks[index].done;
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  renderTasks(tasks);
+}
+function editTask(index) {
+  editingIndex = index; 
+  editInput.value = tasks[index].text; 
+  editModal.style.display = 'flex'; 
 }
 
-// تأكيد الحذف
-document.getElementById('confirmDelete').addEventListener('click', () => {
-  if (taskToDeleteIndex !== null) {
-    tasks.splice(taskToDeleteIndex, 1); // حذف المهمة من المصفوفة
-    localStorage.setItem('tasks', JSON.stringify(tasks)); // تحديث التخزين المحلي
-    renderTasks(tasks); // إعادة عرض المهام
-    taskToDeleteIndex = null; // إعادة تعيين الفهرس
+function saveEdit() {
+  const newTask = editInput.value.trim();
+  if (newTask !== '') {
+    tasks[editingIndex].text = newTask; 
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    renderTasks(tasks); 
+    closeEditModal(); 
   }
-  closeConfirmModal(); // إغلاق النافذة
+}
+function closeEditModal() {
+  editModal.style.display = 'none';
+  editInput.value = '';
+}
+function deleteTask(index) {
+  tasks.splice(index, 1);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  renderTasks(tasks);
+}
+document.getElementById("delete-done").addEventListener("click", () => {
+  deleteDoneModal.classList.remove("hidden");
 });
 
-// إلغاء الحذف
-document.getElementById('cancelDelete').addEventListener('click', closeConfirmModal);
+confirmDeleteDoneBtn.addEventListener("click", () => {
+  tasks = tasks.filter(task => !task.done); 
+  localStorage.setItem("tasks", JSON.stringify(tasks)); 
+  renderTasks(tasks); 
+  deleteDoneModal.classList.add("hidden"); 
+});
 
-// إغلاق النافذة
-function closeConfirmModal() {
-  document.getElementById('confirmModal').style.display = 'none'; // إخفاء النافذة
+cancelDeleteDoneBtn.addEventListener("click", () => {
+  deleteDoneModal.classList.add("hidden"); 
+});
+
+
+document.getElementById("delete-all").addEventListener("click", () => {
+  deleteAllModal.classList.remove("hidden"); 
+});
+
+confirmDeleteAllBtn.addEventListener("click", () => {
+  tasks = []; 
+  localStorage.setItem("tasks", JSON.stringify(tasks)); 
+  renderTasks(tasks); 
+  deleteAllModal.classList.add("hidden");
+});
+
+cancelDeleteAllBtn.addEventListener("click", () => {
+  deleteAllModal.classList.add("hidden"); 
+})
+renderTasks(tasks);
+
+let taskToDeleteIndex = null; 
+
+function deleteTask(index) {
+  taskToDeleteIndex = index; 
+  document.getElementById('confirmModal').style.display = 'flex'; 
 }
+document.getElementById('confirmDelete').addEventListener('click', () => {
+  if (taskToDeleteIndex !== null) {
+    tasks.splice(taskToDeleteIndex, 1); 
+    localStorage.setItem('tasks', JSON.stringify(tasks)); 
+    renderTasks(tasks); 
+    taskToDeleteIndex = null; 
+  }
+  closeConfirmModal(); 
+});
 
+document.getElementById('cancelDelete').addEventListener('click', closeConfirmModal);
+function closeConfirmModal() {
+  document.getElementById('confirmModal').style.display = 'none';
+}
+document.addEventListener("DOMContentLoaded", function() {
+  const todoList = document.querySelector(".todo-list");
+});
