@@ -4,50 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Todo Manager</title>
-  <link rel="stylesheet" href="styles.css"> <!-- ملف CSS خارجي -->
+  <link rel="stylesheet" href="styles.css"> 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-  <!-- عنوان الصفحة -->
   <h1>Todo Input</h1>
-  <!-- إدخال المهمة وقسم إضافة المهام -->
   <div class="todo-container">
     <div class="todo-input-wrapper" style="position: relative;">
-      <i class="fas fa-book"></i> 
+      <i class="fas fa-book todo-icon"></i>
       <input 
         type="text" 
         id="todoInput" 
         class="todo-input" 
-        placeholder="New Task" 
+        placeholder="New Todo" 
         onfocus="showDropdown()"
-      > <!-- إظهار القائمة عند التركيز -->
+   >
       <div id="warning" class="warning"></div>
-      <div id="dropdown" class="dropdown"></div> <!-- قائمة الاقتراحات المنسدلة -->
-    </div> 
-  
+      <div id="dropdown" class="dropdown"></div>
+    </div>
     <button class="add-btn" onclick="addTask()">Add Task</button>
+    <p id="errorMessage" class="hidden">Task must be at least 5 characters long.</p>
   </div> 
-  <!-- عنوان قائمة المهام -->
   <div class="h1">
     <h1>Todo List</h1>
   </div>
-  <!-- أزرار الفلاتر لعرض جميع المهام أو المكتملة أو غير المكتملة -->
   <div class="filter-buttons">
     <button id="show-all">All</button>
     <button id="show-done">Done</button>
     <button id="show-todo">Todo</button>
   </div>
-  
-  <!-- قائمة المهام -->
   <ul id="todo-list"></ul>
-  
-  <!-- أزرار الحذف -->
   <div class="delete-buttons">
     <button id="delete-done">Delete Done Tasks</button>
     <button id="delete-all">Delete All Tasks</button>
   </div>
-
-  <!-- نافذة التعديل -->
   <div id="editModal" class="modal" style="display:none;">
     <div id="modalContent">
       <h2>Rename Task</h2>
@@ -59,7 +49,6 @@
     </div>
   </div>
 
-  <!-- نافذة تأكيد الحذف -->
   <div id="confirmModal" class="modal" style="display:none;">
     <div class="modal-content">
       <h2>Delete Task</h2>
@@ -69,7 +58,27 @@
         <button id="cancelDelete">Cancel</button>
       </div>
     </div>
+  </div> 
+    <div id="deleteDoneModal" class="modal hidden">
+    <div class="modal-content">
+    <h2>Delete Done</h2>
+    <p>Are you sure you want to delete all tasks?</p>
+    <div class="modal-buttons">
+      <button class="confirm-btn" id="confirmDeleteDone">Confirm</button>
+      <button class="cancel-btn" id="cancelDeleteDone">Cancel</button>
+    </div>
   </div>
-  <script src="script.js"></script> <!-- ملف JavaScript -->
+</div>
+<div id="deleteAllModal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Delete All</h2>
+    <p>Are you sure you want to delete all tasks?</p>
+    <div class="modal-buttons">
+      <button class="confirm-btn" id="confirmDeleteAll">Confirm</button>
+      <button class="cancel-btn" id="cancelDeleteAll">Cancel</button>
+    </div>
+  </div>
+</div>
+  <script src="script.js"></script> 
 </body>
 </html>
