@@ -60,7 +60,7 @@ function renderTasks(filteredTasks) {
     actionsDiv.className = 'actions';
     const editBtn = document.createElement('button');
     editBtn.className = 'edit-btn';
-    editBtn.innerHTML = '<i class="fas fa-edit"></i>'; 
+    editBtn.innerHTML = '<i class="bx bxs-pencil"></i>'; 
     editBtn.addEventListener('click', () => editTask(index)); 
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
